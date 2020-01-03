@@ -103,10 +103,10 @@ class DashDaemon():
         block_hash = self.rpc_command('getblockhash', height)
         return block_hash
 
-    def get_superblock_budget_allocation(self, height=None):
+    def get_superblock_budget_allocation(self, height=None, pool=0):
         if height is None:
             height = self.rpc_command('getblockcount')
-        return Decimal(self.rpc_command('getsuperblockbudget', height))
+        return Decimal(self.rpc_command('getsuperblockbudget', height, pool))
 
     def next_superblock_max_budget(self):
         cycle = self.superblockcycle()
@@ -116,7 +116,10 @@ class DashDaemon():
         next_superblock_height = last_superblock_height + cycle
 
         last_allocation = self.get_superblock_budget_allocation(last_superblock_height)
+        last_allocation += self.get_superblock_budget_allocation(last_superblock_height, 1)
+
         next_allocation = self.get_superblock_budget_allocation(next_superblock_height)
+        next_allocation += self.get_superblock_budget_allocation(next_superblock_height, 1)
 
         next_superblock_max_budget = next_allocation
 

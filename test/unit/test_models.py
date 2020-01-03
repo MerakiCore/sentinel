@@ -49,6 +49,7 @@ def test_governance_object(governance_object):
         'object_creation_time',
         'object_hash',
         'object_parent_hash',
+        'object_pool',
         'object_type',
         'object_revision',
         'object_fee_tx',

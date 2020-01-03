@@ -62,10 +62,12 @@ def attempt_superblock_creation(dashd):
         return
 
     proposals = Proposal.approved_and_ranked(proposal_quorum=dashd.governance_quorum(), next_superblock_max_budget=dashd.next_superblock_max_budget())
-    budget_max = dashd.get_superblock_budget_allocation(event_block_height)
+    budget_max_0 = dashd.get_superblock_budget_allocation(event_block_height, 0)
+    budget_max_1 = dashd.get_superblock_budget_allocation(event_block_height, 1)
+
     sb_epoch_time = dashd.block_height_to_epoch(event_block_height)
 
-    sb = dashlib.create_superblock(proposals, event_block_height, budget_max, sb_epoch_time)
+    sb = dashlib.create_superblock(proposals, event_block_height, budget_max_0, budget_max_1, sb_epoch_time)
     if not sb:
         printdbg("No superblock created, sorry. Returning.")
         return

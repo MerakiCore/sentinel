@@ -16,12 +16,12 @@ def test_dashd():
     config_text = DashConfig.slurp_config_file(config.dash_conf)
     network = 'mainnet'
     is_testnet = False
-    genesis_hash = u'00000ffd590b1485b3caadc19b22e6379c733355108f107a430458cdf3407ab6'
+    genesis_hash = u'0000003d1edd3bd1d5c485d34c19bd1888d5ff78bc4cf57062975aa043f7c405'
     for line in config_text.split("\n"):
         if line.startswith('testnet=1'):
             network = 'testnet'
             is_testnet = True
-            genesis_hash = u'00000bafbc94add76cb75e2ec92894837288a481e5c005f6563d91623bf8bc2c'
+            genesis_hash = u'000006aa6738f56e02859c97ed1256467c29324c0055dc5355bc02d295b88f46'
 
     creds = DashConfig.get_rpc_creds(config_text, network)
     dashd = DashDaemon(**creds)

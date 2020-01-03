@@ -92,7 +92,7 @@ def parse_masternode_status_vin(status_vin_string):
     return vin
 
 
-def create_superblock(proposals, event_block_height, budget_max, sb_epoch_time):
+def create_superblock(proposals, event_block_height, budget_max_0, budget_max_1, sb_epoch_time):
     from models import Superblock, GovernanceObject, Proposal
     from constants import SUPERBLOCK_FUDGE_WINDOW
     import copy
@@ -102,16 +102,18 @@ def create_superblock(proposals, event_block_height, budget_max, sb_epoch_time):
         printdbg("No proposals, cannot create an empty superblock.")
         return None
 
-    budget_allocated = Decimal(0)
+    budget_allocated_map = {0: Decimal(0), 1: Decimal(0)}
     fudge = SUPERBLOCK_FUDGE_WINDOW  # fudge-factor to allow for slightly incorrect estimates
 
     payments_list = []
 
     for proposal in proposals:
+        pool = proposal.governance_object.object_pool
+        budget_max = budget_max_0 if pool == 0 else budget_max_1
         fmt_string = "name: %s, rank: %4d, hash: %s, amount: %s <= %s"
 
         # skip proposals that are too expensive...
-        if (budget_allocated + proposal.payment_amount) > budget_max:
+        if (budget_allocated_map[pool] + proposal.payment_amount) > budget_max:
             printdbg(
                 fmt_string % (
                     proposal.name,
@@ -172,7 +174,7 @@ def create_superblock(proposals, event_block_height, budget_max, sb_epoch_time):
         proposed_sb_size = len(sb_temp.serialise())
 
         # add proposal and keep track of total budget allocation
-        budget_allocated += proposal.payment_amount
+        budget_allocated_map[pool] += proposal.payment_amount
         payments_list.append(payment)
 
     # don't create an empty superblock
@@ -216,7 +218,7 @@ def did_we_vote(output):
     err_msg = ''
 
     try:
-        detail = output.get('detail').get('dash.conf')
+        detail = output.get('detail').get('meraki.conf')
         result = detail.get('result')
         if 'errorMessage' in detail:
             err_msg = detail.get('errorMessage')

@@ -66,6 +66,7 @@ class GovernanceObject(BaseModel):
     object_type = IntegerField(default=0)
     object_revision = IntegerField(default=1)
     object_fee_tx = CharField(default='')
+    object_pool = IntegerField(default=0)
     yes_count = IntegerField(default=0)
     no_count = IntegerField(default=0)
     abstain_count = IntegerField(default=0)
@@ -109,18 +110,20 @@ class GovernanceObject(BaseModel):
 
         object_hash = rec['Hash']
 
+        # deserialise and extract object
+        json_str = binascii.unhexlify(rec['DataHex']).decode('utf-8')
+        dikt = gobject_json.extract_object(json_str)
+
+        print(rec['DataHex'])
         gobj_dict = {
             'object_hash': object_hash,
             'object_fee_tx': rec['CollateralHash'],
+            'object_pool': 0 if dikt['type'] == 2 else dikt['pool'],
             'absolute_yes_count': rec['AbsoluteYesCount'],
             'abstain_count': rec['AbstainCount'],
             'yes_count': rec['YesCount'],
             'no_count': rec['NoCount'],
         }
-
-        # deserialise and extract object
-        json_str = binascii.unhexlify(rec['DataHex']).decode('utf-8')
-        dikt = gobject_json.extract_object(json_str)
 
         subobj = None
 

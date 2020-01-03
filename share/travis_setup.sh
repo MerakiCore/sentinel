@@ -4,6 +4,6 @@ set -evx
 mkdir ~/.dashcore
 
 # safety check
-if [ ! -f ~/.dashcore/.dash.conf ]; then
-  cp share/dash.conf.example ~/.dashcore/dash.conf
+if [ ! -f ~/.merakicore/.meraki.conf ]; then
+  cp share/meraki.conf.example ~/.merakicore/meraki.conf
 fi
