@@ -114,7 +114,6 @@ class GovernanceObject(BaseModel):
         json_str = binascii.unhexlify(rec['DataHex']).decode('utf-8')
         dikt = gobject_json.extract_object(json_str)
 
-        print(rec['DataHex'])
         gobj_dict = {
             'object_hash': object_hash,
             'object_fee_tx': rec['CollateralHash'],
