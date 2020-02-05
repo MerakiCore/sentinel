@@ -125,9 +125,14 @@ def create_superblock(proposals, event_block_height, budget_max_0, budget_max_1,
             )
             continue
 
+        def normalize(epoch):
+            if len(str(epoch)) >= 13:
+                return int(epoch / 1000.0)
+            return epoch
+
         # skip proposals if the SB isn't within the Proposal time window...
-        window_start = proposal.start_epoch - fudge
-        window_end = proposal.end_epoch + fudge
+        window_start = normalize(proposal.start_epoch) - fudge
+        window_end = normalize(proposal.end_epoch) + fudge
 
         printdbg("\twindow_start: %s" % epoch2str(window_start))
         printdbg("\twindow_end: %s" % epoch2str(window_end))
